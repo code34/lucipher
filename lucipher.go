@@ -2,7 +2,7 @@
 	Author: code34 nicolas_boiteux@yahoo.fr
 	Copyright (C) 2017-2018 Nicolas BOITEUX
 
-	LUCIFER - RC34 Command line tool to cipher / uncipher file
+	LUCIPHER - RC34 Command line tool to cipher / uncipher file
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -34,13 +34,19 @@
 	}
 
 	func main() {
-		passPtr := flag.String("pass", "", "Passphrase from 1 to 256 Bytes")
-		srcPtr := flag.String("src", "doom.luc", "Source file")
-		dstPtr := flag.String("dst", "doom.luc", "Destination file")
+		passPtr := flag.String("p", "", "Passphrase from 1 to 256 Bytes")
+		srcPtr := flag.String("s", "", "Source file")
+		dstPtr := flag.String("d", "", "Destination file")
+		cipherPtr := flag.Bool("uncipher", false, "Uncipher a file")
+
 		flag.Parse()
 
 		dat, err := ioutil.ReadFile(*srcPtr)
 		check (err)
+
+		if !*cipherPtr {
+			hex.Decode(dat,dat)
+		} 
 
 		dat = bytes.Trim(dat, "\xef\xbb\xbf")
 		fmt.Printf("%d \n", dat)
@@ -50,7 +56,13 @@
 		check (err)
 
 		newkey.XorKeyStreamGeneric(dat,dat)
-		newfile := []byte(hex.EncodeToString(dat))
-		ioutil.WriteFile(*dstPtr, newfile , 0777)
+		
+		if *cipherPtr {
+			newfile := []byte(hex.EncodeToString(dat))
+			ioutil.WriteFile(*dstPtr, newfile , 0777)
+		} else {
+			newfile := []byte(dat)
+			ioutil.WriteFile(*dstPtr, newfile , 0777)
+		}
 		newkey.Reset()
 	}
