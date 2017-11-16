@@ -44,7 +44,7 @@
 		check (err)
 		newkey.XorKeyStreamGeneric(dat,dat)
 		newfile := []byte(hex.EncodeToString(dat))
-		ioutil.WriteFile(dstPtr, newfile , 0777)
+		ioutil.WriteFile(dstPtr, newfile , 0600)
 		newkey.Reset()
 	}
 
@@ -58,7 +58,7 @@
 		check (err)
 		newkey.XorKeyStreamGeneric(dst,dst)
 		newfile := []byte(dst)
-		ioutil.WriteFile(dstPtr, newfile , 0777)
+		ioutil.WriteFile(dstPtr, newfile , 0600)
 		newkey.Reset()
 	}
 
