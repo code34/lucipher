@@ -23,46 +23,59 @@
 	import "io/ioutil"
 	import "encoding/hex"
 	import "rc34"
-	import "fmt"
 	import "bytes"
 	import "flag"
+	import "os"
 
 	func check(e error) {
 	    if e != nil {
 	        panic(e)
+	        os.Exit(-1)
 	    }
+	}
+
+	func cipher(passPtr string, srcPtr string, dstPtr string) {
+		dat, err := ioutil.ReadFile(srcPtr)
+		check (err)
+		dat = bytes.Trim(dat, "\xef\xbb\xbf")
+		key := []byte(passPtr)
+		newkey, err := rc34.NewCipher(key)
+		check (err)
+		newkey.XorKeyStreamGeneric(dat,dat)
+		newfile := []byte(hex.EncodeToString(dat))
+		ioutil.WriteFile(dstPtr, newfile , 0777)
+		newkey.Reset()
+	}
+
+	func uncipher(passPtr string, srcPtr string, dstPtr string) {
+		dat, err := ioutil.ReadFile(srcPtr)
+		check (err)
+		dst := make([]byte, hex.DecodedLen(len(dat)))
+		hex.Decode(dst,dat)
+		key := []byte(passPtr)
+		newkey, err := rc34.NewCipher(key)
+		check (err)
+		newkey.XorKeyStreamGeneric(dst,dst)
+		newfile := []byte(dst)
+		ioutil.WriteFile(dstPtr, newfile , 0777)
+		newkey.Reset()
 	}
 
 	func main() {
 		passPtr := flag.String("p", "", "Passphrase from 1 to 256 Bytes")
 		srcPtr := flag.String("s", "", "Source file")
 		dstPtr := flag.String("d", "", "Destination file")
-		cipherPtr := flag.Bool("uncipher", false, "Uncipher a file")
-
+		uncipherPtr := flag.Bool("u", false, "Uncipher a file")
 		flag.Parse()
 
-		dat, err := ioutil.ReadFile(*srcPtr)
-		check (err)
-
-		if !*cipherPtr {
-			hex.Decode(dat,dat)
-		} 
-
-		dat = bytes.Trim(dat, "\xef\xbb\xbf")
-		fmt.Printf("%d \n", dat)
-		key := []byte(*passPtr)
-
-		newkey, err := rc34.NewCipher(key)
-		check (err)
-
-		newkey.XorKeyStreamGeneric(dat,dat)
-		
-		if *cipherPtr {
-			newfile := []byte(hex.EncodeToString(dat))
-			ioutil.WriteFile(*dstPtr, newfile , 0777)
-		} else {
-			newfile := []byte(dat)
-			ioutil.WriteFile(*dstPtr, newfile , 0777)
+		keylen := len(*passPtr)
+		if keylen > 256 {
+			os.Exit(-1)
 		}
-		newkey.Reset()
+
+		if *uncipherPtr {
+			uncipher(*passPtr, *srcPtr, *dstPtr)
+		} else {
+			cipher(*passPtr, *srcPtr, *dstPtr)
+		}
 	}
