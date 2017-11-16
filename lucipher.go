@@ -63,7 +63,7 @@
 	}
 
 	func version() {
-		fmt.Printf("LUCIPHER v 0.1 - github.com/code34")
+		fmt.Printf("LUCIPHER v 0.1 - github.com/code34 \n")
 		os.Exit(0)
 	}
 
