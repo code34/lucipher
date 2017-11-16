@@ -16,6 +16,13 @@
 	
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+
+	LUCIPHER uses a 2048-bits encryption algorithm, and does not contain any
+	security mechanism to protect against encryption of certain types of files,
+	or even confirmation before encryption. If you use it, you use it at your
+	own risk. This can lead to non-reversible encryption operations, potentially
+	resulting in the complete loss of your data. Always check your command
+	line before launching lucipher.
 	*/
 
 	package main
