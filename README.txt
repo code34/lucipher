@@ -17,3 +17,9 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 	*/
+
+	Usage for cipher
+	.\lucipher.exe -p passphrase -s sourcefile -d destinationfile
+
+	Usage for uncipher
+	.\lucipher.exe -p passphrase -s sourcefile -d destinationfile -u
