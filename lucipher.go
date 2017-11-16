@@ -26,6 +26,7 @@
 	import "bytes"
 	import "flag"
 	import "os"
+	import "fmt"
 
 	func check(e error) {
 	    if e != nil {
@@ -61,17 +62,22 @@
 		newkey.Reset()
 	}
 
+	func version() {
+		fmt.Printf("LUCIPHER v 0.1 - github.com/code34")
+		os.Exit(0)
+	}
+
 	func main() {
 		passPtr := flag.String("p", "", "Passphrase from 1 to 256 Bytes")
 		srcPtr := flag.String("s", "", "Source file")
 		dstPtr := flag.String("d", "", "Destination file")
 		uncipherPtr := flag.Bool("u", false, "Uncipher a file")
+		versionPtr := flag.Bool("v", false, "Version")
 		flag.Parse()
 
 		keylen := len(*passPtr)
-		if keylen > 256 {
-			os.Exit(-1)
-		}
+		if keylen > 256 { os.Exit(-1) }
+		if *versionPtr { version() }
 
 		if *uncipherPtr {
 			uncipher(*passPtr, *srcPtr, *dstPtr)
