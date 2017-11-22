@@ -27,13 +27,15 @@
 
 	package main
 
-	import "io/ioutil"
-	import "encoding/hex"
-	import "rc34"
-	import "bytes"
-	import "flag"
-	import "os"
-	import "fmt"
+	import (
+		"io/ioutil"
+		"encoding/hex"
+		"github.com/code34/rc34"
+		"bytes"
+		"flag"
+		"os"
+		"fmt"
+	)
 
 	func check(e error) {
 	    if e != nil {
@@ -70,7 +72,7 @@
 	}
 
 	func version() {
-		fmt.Printf("LUCIPHER v 0.1 - github.com/code34 \n")
+		fmt.Printf("LUCIPHER v 0.11 - github.com/code34 \n")
 		os.Exit(0)
 	}
 
